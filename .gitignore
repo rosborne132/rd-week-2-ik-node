@@ -1,0 +1,15 @@
+# Build
+/build
+
+# Mac
+.DS_Store
+
+# IntelliJ
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# Etc
+.cache

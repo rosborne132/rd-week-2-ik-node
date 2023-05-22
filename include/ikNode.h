@@ -1,14 +1,14 @@
-#ifndef CUSTOM_NODE_H
-#define CUSTOM_NODE_H
+#ifndef IK_NODE_H
+#define IK_NODE_H
 
 #include <maya/MPxNode.h>
 #include <maya/MTypeId.h>
 
-class CustomNode : public MPxNode {
+class IkNode : public MPxNode {
 public:
   virtual MStatus compute(const MPlug &plug, MDataBlock &dataBlock);
 
-  static void *creator() { return new CustomNode(); };
+  static void *creator() { return new IkNode(); };
 
   static MStatus initialize();
 

@@ -12,14 +12,14 @@
 #include <maya/MPlug.h>
 #include <maya/MTransformationMatrix.h>
 
-#include "customNode.h"
+#include "ikNode.h"
 
-MTypeId CustomNode::typeId(0x80004);
-MObject CustomNode::inputVal;
-MObject CustomNode::inputCurve;
-MObject CustomNode::outputVal;
+MTypeId IkNode::typeId(0x80004);
+MObject IkNode::inputVal;
+MObject IkNode::inputCurve;
+MObject IkNode::outputVal;
 
-MStatus CustomNode::initialize() {
+MStatus IkNode::initialize() {
   MStatus status = MS::kSuccess;
 
   // Declaring all the needed attribute function sets
@@ -72,7 +72,7 @@ MStatus CustomNode::initialize() {
   return status;
 }
 
-MStatus CustomNode::compute(const MPlug &plug, MDataBlock &dataBlock) {
+MStatus IkNode::compute(const MPlug &plug, MDataBlock &dataBlock) {
   if (plug != outputVal)
     return MS::kSuccess;
 

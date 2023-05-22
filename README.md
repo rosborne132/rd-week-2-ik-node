@@ -1,6 +1,4 @@
-# Maya Plug-in Template
-This is a template repo for creating a Maya node plugin. Once you create your project, just replace all instances of
-`CustomNode` with your project/node name.
+# IK Node
 
 ## Setup
 
@@ -75,4 +73,3 @@ The MacOS version of Maya doesn't have an output window like Windows. To get aro
 ```bash
 /Applications/Autodesk/maya{version}/Maya.app/Contents/bin/maya -prompt
 ```
-

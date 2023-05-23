@@ -1,22 +1,21 @@
 #include <maya/MFnPlugin.h>
 
-#include "ikNode.h"
+#include "stretchyIkNode.h"
 
 MStatus initializePlugin(MObject obj) {
-  MFnPlugin fnPlugin(obj, "Autodesk", "1.0", "Any");
-  MStatus status =
-      fnPlugin.registerNode("IkNode", IkNode::typeId, IkNode::creator,
-                            IkNode::initialize, MPxNode::kDependNode);
+  MStatus status;
+  MFnPlugin fnPlugin(obj, "Autodesk", "1.0", "Any", &status);
+  CHECK_MSTATUS_AND_RETURN_IT(status);
+  CHECK_MSTATUS_AND_RETURN_IT(fnPlugin.registerNode(
+      "StretchyIkNode", StretchyIkNode::typeId, StretchyIkNode::creator,
+      StretchyIkNode::initialize, MPxNode::kDependNode));
 
-  if (status != MS::kSuccess)
-    status.perror("Could not register the poseReader node");
-
-  return status;
+  return MS::kSuccess;
 }
 
 MStatus uninitializePlugin(MObject obj) {
-  MFnPlugin fnPlugin;
-  fnPlugin.deregisterNode(IkNode::typeId);
+  MFnPlugin fnPlugin(obj);
+  CHECK_MSTATUS_AND_RETURN_IT(fnPlugin.deregisterNode(StretchyIkNode::typeId));
 
   return MS::kSuccess;
 }

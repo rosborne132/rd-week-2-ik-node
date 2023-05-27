@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(PROJECT_NAME IkNode)
+set(PROJECT_NAME StretchyIkNode)
 project(${PROJECT_NAME})
 
 include($ENV{DEVKIT_LOCATION}/cmake/pluginEntry.cmake)

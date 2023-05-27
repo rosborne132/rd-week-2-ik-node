@@ -22,7 +22,7 @@ public:
   // Features
   static MObject inSlideAttr;
   static MObject inStrectchAttr;
-  static MObject inRoleVectorLockAttr;
+  static MObject inPoleVectorLockAttr;
 
   // Outputs
   static MObject outUpperLengthAttr;
@@ -30,6 +30,16 @@ public:
 
   static MTypeId typeId;
   static MStatus initialize();
-  static void *creator() { return new StretchyIkNode(); };
+  static void *creator() { return new StretchyIkNode; };
   MStatus compute(const MPlug &plug, MDataBlock &dataBlock) override;
+
+private:
+  void slideLengths(MDataBlock &dataBlock, double &lowerLength,
+                    double &upperLength, const double &chainLength);
+  void stretchLengths(MDataBlock &dataBlock, double &lowerLength,
+                      double &upperLength, const double &chainLength,
+                      const MVector &control, const MVector &root);
+  void poleVectorLockLengths(MDataBlock &dataBlock, double &lowerLength,
+                             double &upperLength, const MVector &control,
+                             const MVector &root, const MVector &pullVector);
 };

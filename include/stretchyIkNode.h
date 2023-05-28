@@ -24,6 +24,10 @@ public:
   static MObject inStrectchAttr;
   static MObject inPoleVectorLockAttr;
 
+  // Homework
+  static MObject inUpperScaleAttr;
+  static MObject inLowerScaleAttr;
+
   // Outputs
   static MObject outUpperLengthAttr;
   static MObject outLowerLengthAttr;
@@ -34,6 +38,9 @@ public:
   MStatus compute(const MPlug &plug, MDataBlock &dataBlock) override;
 
 private:
+  void adjustLengths(MDataBlock &dataBlock, MObject &inUpperScaleAttr,
+                     MObject &inLowerScaleAttr, double &lowerLength,
+                     double &upperLength);
   void slideLengths(MDataBlock &dataBlock, double &lowerLength,
                     double &upperLength, const double &chainLength);
   void stretchLengths(MDataBlock &dataBlock, double &lowerLength,

@@ -15,6 +15,10 @@ MObject StretchyIkNode::inSlideAttr;
 MObject StretchyIkNode::inStrectchAttr;
 MObject StretchyIkNode::inPoleVectorLockAttr;
 
+// Homework
+MObject StretchyIkNode::inUpperScaleAttr;
+MObject StretchyIkNode::inLowerScaleAttr;
+
 // Outputs
 MObject StretchyIkNode::outUpperLengthAttr;
 MObject StretchyIkNode::outLowerLengthAttr;
@@ -57,7 +61,7 @@ MStatus StretchyIkNode::initialize() {
 
   inGlobalScaleAttr = fnNumericAttr.create(
       "inGlobalScale", "inGlobalScale", MFnNumericData::kDouble, 0.0, &status);
-  status = fnNumericAttr.setMin(0.0);
+  status = fnNumericAttr.setMin(0.00001);
   status = addAttribute(inGlobalScaleAttr);
   CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -84,6 +88,19 @@ MStatus StretchyIkNode::initialize() {
   status = addAttribute(inPoleVectorLockAttr);
   CHECK_MSTATUS_AND_RETURN_IT(status);
 
+  // Homework
+  inUpperScaleAttr = fnNumericAttr.create(
+      "inUpperScale", "inUpperScale", MFnNumericData::kDouble, 1.0, &status);
+  status = fnNumericAttr.setMin(0.00001);
+  status = addAttribute(inUpperScaleAttr);
+  CHECK_MSTATUS_AND_RETURN_IT(status);
+
+  inLowerScaleAttr = fnNumericAttr.create(
+      "inLowerScale", "inLowerScale", MFnNumericData::kDouble, 1.0, &status);
+  status = fnNumericAttr.setMin(0.00001);
+  status = addAttribute(inLowerScaleAttr);
+  CHECK_MSTATUS_AND_RETURN_IT(status);
+
   // Outputs
   outUpperLengthAttr =
       fnNumericAttr.create("outUpperLength", "outUpperLength",
@@ -96,6 +113,12 @@ MStatus StretchyIkNode::initialize() {
                            MFnNumericData::kDouble, 0.0, &status);
   status = addAttribute(outLowerLengthAttr);
   CHECK_MSTATUS_AND_RETURN_IT(status);
+
+  // Homework
+  status = attributeAffects(inUpperScaleAttr, outUpperLengthAttr);
+  status = attributeAffects(inUpperScaleAttr, outLowerLengthAttr);
+  status = attributeAffects(inLowerScaleAttr, outUpperLengthAttr);
+  status = attributeAffects(inLowerScaleAttr, outLowerLengthAttr);
 
   // IK Chain Info
   status = attributeAffects(inRootMatrixAttr, outUpperLengthAttr);
@@ -120,6 +143,17 @@ MStatus StretchyIkNode::initialize() {
   status = attributeAffects(inPoleVectorLockAttr, outLowerLengthAttr);
 
   return status;
+}
+
+void StretchyIkNode::adjustLengths(MDataBlock &dataBlock,
+                                   MObject &inUpperScaleAttr,
+                                   MObject &inLowerScaleAttr,
+                                   double &lowerLength, double &upperLength) {
+  const double upperScale = dataBlock.inputValue(inUpperScaleAttr).asDouble();
+  const double lowerScale = dataBlock.inputValue(inLowerScaleAttr).asDouble();
+
+  upperLength *= upperScale;
+  lowerLength *= lowerScale;
 }
 
 void StretchyIkNode::slideLengths(MDataBlock &dataBlock, double &lowerLength,
@@ -190,6 +224,10 @@ MStatus StretchyIkNode::compute(const MPlug &plug, MDataBlock &dataBlock) {
       dataBlock.inputValue(inUpperLengthAttr).asDistance().asCentimeters();
   double lowerLength =
       dataBlock.inputValue(inLowerLengthAttr).asDistance().asCentimeters();
+
+  StretchyIkNode::adjustLengths(dataBlock, inUpperScaleAttr, inLowerScaleAttr,
+                                lowerLength, upperLength);
+
   const double chainLength = upperLength + lowerLength;
 
   // Get the positions of the incoming matrices and get the matrix position
@@ -205,10 +243,7 @@ MStatus StretchyIkNode::compute(const MPlug &plug, MDataBlock &dataBlock) {
   MVector control(controlMatrix[3]); // ikh = Inverse Kinematic Handle
 
   // "pre-scale" space math
-  double globalScale = dataBlock.inputValue(inGlobalScaleAttr).asDouble();
-
-  if (globalScale < 0.00001)
-    globalScale *= 0.00001;
+  const double globalScale = dataBlock.inputValue(inGlobalScaleAttr).asDouble();
 
   root /= globalScale;
   pullVector /= globalScale;

@@ -2,7 +2,7 @@
 #include "utils.h"
 
 // IK Chain info
-MTypeId StretchyIkNode::typeId(0x80004);
+MTypeId StretchyIkNode::typeId(0x80005);
 MObject StretchyIkNode::inRootMatrixAttr;
 MObject StretchyIkNode::inPoleVectorMatrixAttr;
 MObject StretchyIkNode::inControlMatrixAttr;
